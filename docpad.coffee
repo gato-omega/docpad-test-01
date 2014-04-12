@@ -19,16 +19,26 @@ docpadConfig = {
       prependedScripts = prependedScripts || []
       appendedScripts = appendedScripts || []
 
-      excludedScripts = prependedScripts.concat appendedScripts
+      # Both prepended and appended scripts make up excluded scripts
+      # from the ones that go 'in the middle'
+      excludedScripts = []
+
+      # Transform all exluded scripts from folder to absolute paths
+      for script in prependedScripts.concat(appendedScripts)
+        excludedScripts.push("/#{folder}/#{script}")
 
       # Get all script urls/paths but only put into "scripts" those that are not overriden
       # by orderedScripts
       for script in @getFilesAtPath(folder).toJSON()
-        scripts.push(script.url) if (excludedScripts.indexOf(script.outFilename) < 0 )
+        scripts.push(script.url) if (excludedScripts.indexOf(script.url) < 0 )
 
-      # Join the two arrays, scripts in order first
-      scripts = prependedScripts.concat(scripts)
-      scripts = scripts.concat(appendedScripts)
+      # Prepend the specified scripts and tranform their relative path to absolute
+      for script in prependedScripts
+        scripts.unshift("/#{folder}/#{script}")
+
+      # Prepend the specified scripts and tranform their relative path to absolute
+      for script in appendedScripts
+        scripts.push("/#{folder}/#{script}")
 
       fingerprintedScripts = []
 
@@ -37,7 +47,6 @@ docpadConfig = {
 
       # Call the scripts block and add those urls
       @getBlock("scripts").add(fingerprintedScripts).toHTML()
-
 
   collections:
     pages: ->
