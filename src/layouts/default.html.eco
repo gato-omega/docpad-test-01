@@ -1,4 +1,4 @@
-<!doctype html>
+/aja<!doctype html>
 <html>
 <head>
   <title><%= @getPreparedTitle() %></title>
@@ -24,8 +24,8 @@
   <h1><%= @document.title %></h1>
   <%- @content %>
 
-  <%- @jsRequireTree('javascripts', ['prepended.js'], ['appended.js']) %>
-
+  <%- @jsRequireTree('vendor/javascripts') %>
+  <%- @jsRequireTree('javascripts', ['prepended.js'], ['appended.js'], ['whatever/aja.js']) %>
 
 
 

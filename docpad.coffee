@@ -14,26 +14,28 @@ docpadConfig = {
     # @param folder the folder for which to load the files from
     # @param prependedScripts scripts from the folder to put first
     # @param prependedScripts scripts from the folder to put last
-    jsRequireTree: (folder, prependedScripts, appendedScripts) ->
+    # @param excludedScripts scripts from the folder to not include
+    jsRequireTree: (folder, prependedScripts, appendedScripts, excludedScripts) ->
       scripts = []
       prependedScripts = prependedScripts || []
       appendedScripts = appendedScripts || []
+      excludedScripts = excludedScripts || []
 
-      # Both prepended and appended scripts make up excluded scripts
+      # Query excluded scripts are the ones that do not go 'in the middle'
       # from the ones that go 'in the middle'
-      excludedScripts = []
+      queryExcludedScripts = []
 
       # Transform all exluded scripts from folder to absolute paths
-      for script in prependedScripts.concat(appendedScripts)
-        excludedScripts.push("/#{folder}/#{script}")
+      for script in prependedScripts.concat(appendedScripts).concat(excludedScripts)
+        queryExcludedScripts.push("/#{folder}/#{script}")
 
       # Get all script urls/paths but only put into "scripts" those that are not overriden
       # by orderedScripts
       for script in @getFilesAtPath(folder).toJSON()
-        scripts.push(script.url) if (excludedScripts.indexOf(script.url) < 0 )
+        scripts.push(script.url) if (queryExcludedScripts.indexOf(script.url) < 0 )
 
       # Prepend the specified scripts and tranform their relative path to absolute
-      for script in prependedScripts
+      for script in prependedScripts.reverse() #reverse so that unshift puts first one as first correctly
         scripts.unshift("/#{folder}/#{script}")
 
       # Prepend the specified scripts and tranform their relative path to absolute
