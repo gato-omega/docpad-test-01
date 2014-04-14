@@ -1,12 +1,10 @@
-/aja<!doctype html>
+<!doctype html>
 <html>
 <head>
   <title><%= @getPreparedTitle() %></title>
   <%- @getBlock("meta").toHTML() %>
 
-  <% for stylesheet in @getCollection("stylesheet").toJSON(): %>
-  <link rel="stylesheet" href="<%- @asset(stylesheet.url) %>" />
-  <% end %>
+  <%- @includeCSS('styles', [], [], [], fingerprint: true) %>
 
 </head>
 <body>
@@ -24,10 +22,8 @@
   <h1><%= @document.title %></h1>
   <%- @content %>
 
-  <%- @jsRequireTree('vendor/javascripts') %>
-  <%- @jsRequireTree('javascripts', ['prepended.js'], ['appended.js'], ['whatever/aja.js']) %>
-
-
+  <%- @includeJS('vendor/javascripts', [], [], [], fingerprint: false) %>
+  <%- @includeJS('javascripts', ['prepended.js'], ['appended.js'], ['whatever/aja.js'], {fingerprint: false, urlsOnly: true}) %>
 
 </body>
 </html>
