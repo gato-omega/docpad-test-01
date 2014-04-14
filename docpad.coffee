@@ -10,7 +10,8 @@ docpadConfig = {
     getPreparedTitle: -> if @document.title then "#{@document.title} | #{@site.title}" else @site.title
     importStylesheets: ->
       @getBlock("scripts").toHTML()
-    # jsRequire tree will take a folder name as first argument
+    # jsRequire tree will include all files in a folder and will link them
+    # to getBlock('scripts'), while doing so, will ouput the fingerprinted asset name
     # @param folder the folder for which to load the files from
     # @param prependedScripts scripts from the folder to put first
     # @param prependedScripts scripts from the folder to put last
